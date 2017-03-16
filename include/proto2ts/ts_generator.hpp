@@ -97,13 +97,16 @@ namespace proto2ts {
       // out << "// protobuf syntax: " << FileDescriptor::SyntaxName(fd.syntax()) << "\n";
     }
 
-    void write_imports(const std::vector<field>& fields,
+    void write_imports(const std::string& current_type_name,
+                       const std::vector<field>& fields,
                        std::ostringstream& out,
                        const std::vector<std::string> exclude_names) {
       auto print_import = false;
       auto dedup = std::set<std::string>{};
       // add to dedup list of excluded_names
       dedup.insert("__MAP__SHIT__");
+      // add current type to the dedup so we do not import ourselves
+      dedup.insert(current_type_name);
       for (const auto& e : exclude_names) {
         dedup.insert(e);
       }
@@ -206,7 +209,7 @@ namespace proto2ts {
         out << "\n";
       }
       auto nested = get_nested_type_names(desc);
-      write_imports(fields, out, nested);
+      write_imports(desc.name(), fields, out, nested);
       write_nested_type(fd, desc, out);
       write_interface(desc, fields, out);
       out << "\n";
