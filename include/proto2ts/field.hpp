@@ -115,7 +115,7 @@ namespace proto2ts {
     // name
     os << f.name;
     // is optional ?
-    if (f.labl == label::optional) {
+    if (f.labl == label::optional || f.labl == label::repeated) {
       os << "?";
     }
     os << ": ";
